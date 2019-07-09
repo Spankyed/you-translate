@@ -14,6 +14,8 @@ export default function (videoId, target, setCaptions){
     videoID: videoId, // youtube video id
     lang: 'en' // default: `en`
   }).then(captions => {
+
+    console.log('setting', captions)
     setCaptions(captions)
 
     timedText = captions.map((caption)=>{

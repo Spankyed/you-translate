@@ -57,6 +57,9 @@ export default {
         });  
         function onPlayerReady(event) {
             //player.mute();
+            console.log(event, state)
+            //debugger
+            updateScroll(event.target, state)
         }
         //console.log(actions)
         setTimeout(_=>{actions.load()}, 1500)
@@ -64,6 +67,8 @@ export default {
         actions.setPlayer(player)
         //console.log('player',state, actions)
         }
+
+        
     }
 
     const seek = (translation, index, state) => (e) => {
@@ -98,7 +103,7 @@ export default {
                   </div>
                   {
                     state.translations.map((translation, index) => (
-                      <p class="px-4 py-1 hover:bg-yellow-300 cursor-pointer" onclick={seek(translation, index, state)}>{translation.translatedText}</p>
+                      <p id={index} onclick={seek(translation, index, state)} class="px-4 py-1 hover:bg-yellow-300 cursor-pointer">{translation.translatedText}</p>
                     ))
 
                   }
@@ -115,8 +120,32 @@ export default {
 }
 
 
-function onYouTubeIframeAPIReady () { var player ;   
-  player = new YT.Player( 'player' , {     videoId : 'M7lc1UVf-VE' ,    
- playerVars : { 'autoplay' : 1 , 'controls' : 0 }})
- player.seekTo(newTime);
+function updateScroll(player, state) {
+  let captions = state.captions
+  let start = 0
+  let last = 0
+  const update = (now) => {
+      let msElapsed = now - start
+
+      if (!last || now - last >= 2*1000) {
+          
+
+          let time = player.getCurrentTime()
+          console.log(time, 'then', state)
+        
+          let id = getCaptionIndex(time, captions).toString()
+          let el = document.getElementById(id)
+          if(el) el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" })
+          last = now;
+      }
+      requestAnimationFrame(update);
+  }
+  update(start)
+}
+
+function getCaptionIndex(time, captions) {
+  let index = captions.findIndex((caption) => {
+      return parseFloat(caption.start) > time
+  })
+  return index
 }
