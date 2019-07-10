@@ -3,14 +3,16 @@ import translate from '../utils/translate'
 
 export default {
   state: {
-    player: null,
+    //player: null,
+    caption: 0,
     captions: [],
     translations: [],
     loading: false
   },
   actions: {
     load: (evt) => state => ({ loading: !state.loading }),
-    setPlayer: (player) => state => ({ player: player }),
+    //setPlayer: (player) => state => ({ player: player }),
+    setCaption: (caption) => state => ({ caption: caption }),
     setCaptions: (captions) => state => ({ captions: captions }),
     setTranslations: (translations) => state => ({ translations: translations })
   },
@@ -25,14 +27,15 @@ export default {
 
       actions.load()
 
-      let translations =  translate(video_id, lang_id, actions.setCaptions)
+      let translations = translate(video_id, lang_id, actions.setCaptions)
 
       translations.then(function(resp) {
-        actions.setTranslations(resp.data.translations)
-        //console.log(resp.data.translations[0].translatedText)
-      })
-
-      //console.log('trans',translation)
+        //console.log(resp)
+        actions.setCaptions(resp.captions)
+        actions.setTranslations(resp.translations)
+        actions.load()
+        updateScroll(resp, actions)
+      })    
 
       if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
         window.onYouTubeIframeAPIReady = loadPlayer
@@ -41,7 +44,7 @@ export default {
       }
       function loadPlayer () {
 
-        let player = new YT.Player('video-trans', {
+        window.player = new YT.Player('video-trans', {
           width: 854,
           height: 480,
           videoId: video_id,
@@ -57,29 +60,21 @@ export default {
         });  
         function onPlayerReady(event) {
             //player.mute();
-            console.log(event, state)
-            //debugger
-            updateScroll(event.target, state)
-        }
-        //console.log(actions)
-        setTimeout(_=>{actions.load()}, 1500)
-        
-        actions.setPlayer(player)
-        //console.log('player',state, actions)
         }
 
-        
+        //actions.setPlayer(player)
+
+      }
     }
 
     const seek = (translation, index, state) => (e) => {
       let time = state.captions[index].start
-      console.log('time',state,time)
+      console.log('time',time,state)
       state.player.seekTo(parseFloat(time));
     }
 
     return (  
       <div class="container w-full mx-auto pt-24 md:pt-32 justify-center">
-
           {
             state.loading ?
             (
@@ -103,14 +98,12 @@ export default {
                   </div>
                   {
                     state.translations.map((translation, index) => (
-                      <p id={index} onclick={seek(translation, index, state)} class="px-4 py-1 hover:bg-yellow-300 cursor-pointer">{translation.translatedText}</p>
+                      <p id={index} onclick={seek(translation, index, state)} class={`px-4 py-1 ${state.caption == index ? 'bg-yellow-300' : ''} hover:bg-blue-300 cursor-pointer`}>{translation.translatedText}</p>
                     ))
 
                   }
-
                 </div>
               </section>
-
             )
           }
       </div>
@@ -119,24 +112,27 @@ export default {
   
 }
 
-
-function updateScroll(player, state) {
-  let captions = state.captions
+function updateScroll({captions},{setCaption}) {
   let start = 0
   let last = 0
   const update = (now) => {
       let msElapsed = now - start
-
-      if (!last || now - last >= 2*1000) {
-          
-
-          let time = player.getCurrentTime()
-          console.log(time, 'then', state)
+     
+      if (!last || now - last >= 1000) {
+        //debugger
         
-          let id = getCaptionIndex(time, captions).toString()
+        if (player && player.getCurrentTime){
+          
+          let time = player.getCurrentTime()
+          
+          let index = getCaptionIndex(time, captions)
+          let id = index.toString()
           let el = document.getElementById(id)
           if(el) el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" })
           last = now;
+          console.log(time, captions, index)
+          setCaption(index)
+        }      
       }
       requestAnimationFrame(update);
   }

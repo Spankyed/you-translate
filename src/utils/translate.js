@@ -7,41 +7,44 @@ import striptags from 'striptags'
 // https://console.developers.google.com/apis/credentials
 const apiKey = "AIzaSyCGKUu-Y4RWferkyq3jrIaQPn9IqYm0A1k";
 
-export default function (videoId, target, setCaptions){
-  let timedText;
-
-  let subs = getSubtitles({
+export default async function (videoId, target, setCaptions){
+  let data;
+  let subs = await getSubtitles({
     videoID: videoId, // youtube video id
     lang: 'en' // default: `en`
-  }).then(captions => {
+  }).then(timedText => {
 
-    console.log('setting', captions)
-    setCaptions(captions)
-
-    timedText = captions.map((caption)=>{
-      return caption.text
-    })
-    //console.log(text)
-    let data = {
+    data = {
       captions: timedText,
       source: 'en',
       target: target
     }
 
-    return makeApiRequest(data)
+    let captions = timedText.map((caption)=>{
+      return caption.text
+    })
+
+    let url = "https://www.googleapis.com/language/translate/v2/";
+    url += "?key=" + apiKey;
+    url += captions.map((caption) => "&q=" + encodeURI(caption)).join("")
+    url += "&target=" + data.target;
+    url += "&source=" + data.source;
+
+    return axios.get(url)
   
   });
 
-  return subs
+  data.translations = subs.data.data.translations
+  console.log(data)
+  return data
 }
 
 async function getSubtitles({videoID, lang = 'en'}) {
   //
   // `https://cors-anywhere.herokuapp.com/https://youtube.com/get_video_info?video_id=${videoID}`
-  const { data } = await axios.get(
-    `https://cors-anywhere.herokuapp.com/https://youtube.com/get_video_info?video_id=${videoID}`
-  );
 
+  const { data } = await axios.get(`https://intense-river-58574.herokuapp.com/https://youtube.com/get_video_info?video_id=${videoID}`)
+  
   const decodedData = decodeURIComponent(data);
   //console.log(decodedData)
   // * ensure we have access to captions data
@@ -93,11 +96,11 @@ async function getSubtitles({videoID, lang = 'en'}) {
       };
     });
 
-    console.log('lines',lines)
+    //console.log('lines',lines)
 
   return lines;
 }
-
+/*
 function makeApiRequest(data) {
   
   let url = "https://www.googleapis.com/language/translate/v2/";
@@ -130,6 +133,9 @@ function fetch(url, text) {
 
   if (Object.getOwnPropertyNames(text).length !== 0) return send(url, text) //send request
 }
+
+*/
+
 
 
 /*function getLanguageNames() {
