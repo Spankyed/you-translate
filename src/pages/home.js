@@ -1,23 +1,22 @@
 import { h } from 'hyperapp'
 import { location } from "@hyperapp/router"
 
-const Button = ({ langs, drop, toggle }) => {
+const Button = ({ lang_list, drop, toggle, filter, validate }) => {
 
   const submit = (lang) => (e) => {
     e.preventDefault();
 
-    //console.log('sel',lang)
-
     let form = document.getElementById("translate-form")
-    //form.validate();
-    name = form.elements["url"].value;
+    
+    let url = form.elements["url"].value;
 
-    if (name.length < 10){
-      alert('Enter valid URL')
-      return false
+    let parsedUrl = parseUrl(url)
+
+    //form.validate();
+    if (parsedUrl.valid){     
+      window.location.pathname = `translate/${parsedUrl.video_id}/${lang.val}`; // location.go
     } else {
-      let video_id = name.split("v=")[1];
-      window.location.pathname = `translate/${video_id}/${lang.val}`; // location.go
+      validate(url) // set validUrl = false
     }
   }
 
@@ -40,23 +39,23 @@ const Button = ({ langs, drop, toggle }) => {
                 </g>
               )
             } 
-            
           </svg>
         </button>
-        <div class={`${drop ? '' : 'hidden'} shadow-md my-2 relative pin-t pin-l`}>
-            <ul class="list-reset">
-              <li class="px-2 pb-1"><input class="px-2 text-center border-2 h-8 w-full" placeholder="Filter.." aria-label="Languages Filter"></input><br/></li>
-              {
-                langs.map((lang)=>(
-                  <li onclick={submit(lang)} value={lang.val}>
-                    <p class="p-2 px-3 text-center block text-black hover:bg-gray-300 cursor-pointer">
-                      {lang.text}
-                    </p>
-                  </li>
-                ))
-              }
 
-            </ul>
+        <div class={`${drop ? '' : 'hidden'} shadow-md relative pin-t pin-l`}>
+          <input oninput={filter} class="px-4 text-center border-b-1 h-8 w-full" placeholder="Filter.." aria-label="Languages Filter"/>
+          <ul class="lang-list list-reset overflow-y-auto">
+            {
+              lang_list.map((lang)=>(
+                <li onclick={submit(lang)} value={lang.val}>
+                  <p class="p-2 px-3 text-center block text-black hover:bg-gray-300 cursor-pointer">
+                    {lang.text}
+                  </p>
+                </li> 
+              ))
+            }
+
+          </ul>
         </div>
     </div>
   )
@@ -64,49 +63,60 @@ const Button = ({ langs, drop, toggle }) => {
 
 export default {
   state: {
-    video: 0,
-    languages: [{val:"af", text:"Afrikaans"},{val:"es", text:"Spanish"},{val:"ru", text:"Russian"}],
+    validUrl: true,
+    languages: [ { "val": "af", "text": "Afrikaans" }, { "val": "sq", "text": "Albanian" }, { "val": "am", "text": "Amharic" }, { "val": "ar", "text": "Arabic" }, { "val": "hy", "text": "Armenian" }, { "val": "az", "text": "Azeerbaijani" }, { "val": "eu", "text": "Basque" }, { "val": "be", "text": "Belarusian" }, { "val": "bn", "text": "Bengali" }, { "val": "bs", "text": "Bosnian" }, { "val": "bg", "text": "Bulgarian" }, { "val": "ca", "text": "Catalan" }, { "val": "ceb", "text": "Cebuano" }, { "val": "ny", "text": "Chichewa" }, { "val": "zh", "text": "Chinese (Simplified)" }, { "val": "zh-TW", "text": "Chinese (Traditional)" }, { "val": "co", "text": "Corsican" }, { "val": "hr", "text": "Croatian" }, { "val": "cs", "text": "Czech" }, { "val": "da", "text": "Danish" }, { "val": "nl", "text": "Dutch" }, { "val": "en", "text": "English" }, { "val": "eo", "text": "Esperanto" }, { "val": "et", "text": "Estonian" }, { "val": "tl", "text": "Filipino" }, { "val": "fi", "text": "Finnish" }, { "val": "fr", "text": "French" }, { "val": "fy", "text": "Frisian" }, { "val": "gl", "text": "Galician" }, { "val": "ka", "text": "Georgian" }, { "val": "de", "text": "German" }, { "val": "el", "text": "Greek" }, { "val": "gu", "text": "Gujarati" }, { "val": "ht", "text": "Haitian Creole" }, { "val": "ha", "text": "Hausa" }, { "val": "haw", "text": "Hawaiian" }, { "val": "iw", "text": "Hebrew" }, { "val": "hi", "text": "Hindi" }, { "val": "hmn", "text": "Hmong" }, { "val": "hu", "text": "Hungarian" }, { "val": "is", "text": "Icelandic" }, { "val": "ig", "text": "Igbo" }, { "val": "id", "text": "Indonesian" }, { "val": "ga", "text": "Irish" }, { "val": "it", "text": "Italian" }, { "val": "ja", "text": "Japanese" }, { "val": "jw", "text": "Javanese" }, { "val": "kn", "text": "Kannada" }, { "val": "kk", "text": "Kazakh" }, { "val": "km", "text": "Khmer" }, { "val": "ko", "text": "Korean" }, { "val": "ku", "text": "Kurdish" }, { "val": "ky", "text": "Kyrgyz" }, { "val": "lo", "text": "Lao" }, { "val": "la", "text": "Latin" }, { "val": "lv", "text": "Latvian" }, { "val": "lt", "text": "Lithuanian" }, { "val": "lb", "text": "Luxembourgish" }, { "val": "mk", "text": "Macedonian" }, { "val": "mg", "text": "Malagasy" }, { "val": "ms", "text": "Malay" }, { "val": "ml", "text": "Malayalam" }, { "val": "mt", "text": "Maltese" }, { "val": "mi", "text": "Maori" }, { "val": "mr", "text": "Marathi" }, { "val": "mn", "text": "Mongolian" }, { "val": "my", "text": "Burmese" }, { "val": "ne", "text": "Nepali" }, { "val": "no", "text": "Norwegian" }, { "val": "ps", "text": "Pashto" }, { "val": "fa", "text": "Persian" }, { "val": "pl", "text": "Polish" }, { "val": "pt", "text": "Portuguese" }, { "val": "ma", "text": "Punjabi" }, { "val": "ro", "text": "Romanian" }, { "val": "ru", "text": "Russian" }, { "val": "sm", "text": "Samoan" }, { "val": "gd", "text": "Scots Gaelic" }, { "val": "sr", "text": "Serbian" }, { "val": "st", "text": "Sesotho" }, { "val": "sn", "text": "Shona" }, { "val": "sd", "text": "Sindhi" }, { "val": "si", "text": "Sinhala" }, { "val": "sk", "text": "Slovak" }, { "val": "sl", "text": "Slovenian" }, { "val": "so", "text": "Somali" }, { "val": "es", "text": "Spanish" }, { "val": "su", "text": "Sundanese" }, { "val": "sw", "text": "Swahili" }, { "val": "sv", "text": "Swedish" }, { "val": "tg", "text": "Tajik" }, { "val": "ta", "text": "Tamil" }, { "val": "te", "text": "Telugu" }, { "val": "th", "text": "Thai" }, { "val": "tr", "text": "Turkish" }, { "val": "uk", "text": "Ukrainian" }, { "val": "ur", "text": "Urdu" }, { "val": "uz", "text": "Uzbek" }, { "val": "vi", "text": "Vietnamese" }, { "val": "cy", "text": "Welsh" }, { "val": "xh", "text": "Xhosa" }, { "val": "yi", "text": "Yiddish" }, { "val": "yo", "text": "Yoruba" }, { "val": "zu", "text": "Zulu" } ],
+    lang_list: [ { "val": "af", "text": "Afrikaans" }, { "val": "sq", "text": "Albanian" }, { "val": "am", "text": "Amharic" }, { "val": "ar", "text": "Arabic" }, { "val": "hy", "text": "Armenian" }, { "val": "az", "text": "Azeerbaijani" }, { "val": "eu", "text": "Basque" }, { "val": "be", "text": "Belarusian" }, { "val": "bn", "text": "Bengali" }, { "val": "bs", "text": "Bosnian" }, { "val": "bg", "text": "Bulgarian" }, { "val": "ca", "text": "Catalan" }, { "val": "ceb", "text": "Cebuano" }, { "val": "ny", "text": "Chichewa" }, { "val": "zh", "text": "Chinese (Simplified)" }, { "val": "zh-TW", "text": "Chinese (Traditional)" }, { "val": "co", "text": "Corsican" }, { "val": "hr", "text": "Croatian" }, { "val": "cs", "text": "Czech" }, { "val": "da", "text": "Danish" }, { "val": "nl", "text": "Dutch" }, { "val": "en", "text": "English" }, { "val": "eo", "text": "Esperanto" }, { "val": "et", "text": "Estonian" }, { "val": "tl", "text": "Filipino" }, { "val": "fi", "text": "Finnish" }, { "val": "fr", "text": "French" }, { "val": "fy", "text": "Frisian" }, { "val": "gl", "text": "Galician" }, { "val": "ka", "text": "Georgian" }, { "val": "de", "text": "German" }, { "val": "el", "text": "Greek" }, { "val": "gu", "text": "Gujarati" }, { "val": "ht", "text": "Haitian Creole" }, { "val": "ha", "text": "Hausa" }, { "val": "haw", "text": "Hawaiian" }, { "val": "iw", "text": "Hebrew" }, { "val": "hi", "text": "Hindi" }, { "val": "hmn", "text": "Hmong" }, { "val": "hu", "text": "Hungarian" }, { "val": "is", "text": "Icelandic" }, { "val": "ig", "text": "Igbo" }, { "val": "id", "text": "Indonesian" }, { "val": "ga", "text": "Irish" }, { "val": "it", "text": "Italian" }, { "val": "ja", "text": "Japanese" }, { "val": "jw", "text": "Javanese" }, { "val": "kn", "text": "Kannada" }, { "val": "kk", "text": "Kazakh" }, { "val": "km", "text": "Khmer" }, { "val": "ko", "text": "Korean" }, { "val": "ku", "text": "Kurdish" }, { "val": "ky", "text": "Kyrgyz" }, { "val": "lo", "text": "Lao" }, { "val": "la", "text": "Latin" }, { "val": "lv", "text": "Latvian" }, { "val": "lt", "text": "Lithuanian" }, { "val": "lb", "text": "Luxembourgish" }, { "val": "mk", "text": "Macedonian" }, { "val": "mg", "text": "Malagasy" }, { "val": "ms", "text": "Malay" }, { "val": "ml", "text": "Malayalam" }, { "val": "mt", "text": "Maltese" }, { "val": "mi", "text": "Maori" }, { "val": "mr", "text": "Marathi" }, { "val": "mn", "text": "Mongolian" }, { "val": "my", "text": "Burmese" }, { "val": "ne", "text": "Nepali" }, { "val": "no", "text": "Norwegian" }, { "val": "ps", "text": "Pashto" }, { "val": "fa", "text": "Persian" }, { "val": "pl", "text": "Polish" }, { "val": "pt", "text": "Portuguese" }, { "val": "ma", "text": "Punjabi" }, { "val": "ro", "text": "Romanian" }, { "val": "ru", "text": "Russian" }, { "val": "sm", "text": "Samoan" }, { "val": "gd", "text": "Scots Gaelic" }, { "val": "sr", "text": "Serbian" }, { "val": "st", "text": "Sesotho" }, { "val": "sn", "text": "Shona" }, { "val": "sd", "text": "Sindhi" }, { "val": "si", "text": "Sinhala" }, { "val": "sk", "text": "Slovak" }, { "val": "sl", "text": "Slovenian" }, { "val": "so", "text": "Somali" }, { "val": "es", "text": "Spanish" }, { "val": "su", "text": "Sundanese" }, { "val": "sw", "text": "Swahili" }, { "val": "sv", "text": "Swedish" }, { "val": "tg", "text": "Tajik" }, { "val": "ta", "text": "Tamil" }, { "val": "te", "text": "Telugu" }, { "val": "th", "text": "Thai" }, { "val": "tr", "text": "Turkish" }, { "val": "uk", "text": "Ukrainian" }, { "val": "ur", "text": "Urdu" }, { "val": "uz", "text": "Uzbek" }, { "val": "vi", "text": "Vietnamese" }, { "val": "cy", "text": "Welsh" }, { "val": "xh", "text": "Xhosa" }, { "val": "yi", "text": "Yiddish" }, { "val": "yo", "text": "Yoruba" }, { "val": "zu", "text": "Zulu" } ],
     dropdown: false
   },
   actions: {
+    validate: (url) => state => ({validUrl: parseUrl(url).valid}),
     toggle: (evt) => state => ({ dropdown: !state.dropdown }),
+    filter: (evt) => state => ({ lang_list: state.languages.filter(lang => lang.text.toLowerCase().startsWith(evt.target.value.toLowerCase()))})
   },
   view: (state, actions) => ({match}) => {
 
-    window.scrollTo(0, 0)
-    //var blog = blogs.filter(blog => blog.id == match.params.blog_id )[0]
-
     return (  
-      <div class="container mx-auto min-h-screen">
-        <section class=" leading-tight py-6 px-4">
+      <div class="container mx-auto">
+        <section class=" leading-tight pt-2 md:pt-4 lg:pt-20 px-4">
           <div class="yt-vid py-2 sm:w-5/6 sm:mx-auto">
             <header class="bg-cyan-300">
               <div class="container">
-                  <div class="font-serif text-center">
-                      <h1 class="inline font-serif font-black text-gray-900 text-5xl">You </h1>
-                      <h1 class="inline font-serif bg-red-600 text-gray-100 font-black text-5xl px-3 rounded-lg">Translate</h1>
-                      <h2 class="italic font-serif text-center mt-5">Translate YouTube Closed Captions</h2>
+                  <div class="text-center" style="">
+                      <h1 class="inline yt-text-black text-5xl">You </h1>
+                      <h1 class="inline yt-bg-red text-gray-100 font-black text-5xl px-3 rounded-lg">Translate</h1>
+                      <h2 class="italic text-center mt-5">Translate YouTube Closed Captions</h2>
                   </div>
               </div>
             </header>   
           </div>
-          <form action="" id="translate-form" class="w-full mx-auto max-w-3xl py-12" onsubmit={e => {return submit(); } }>
-            <h2 class="font-light text-center px-2">Enter a video URL and select a language</h2>
+          <form action="" id="translate-form" class="w-full mx-auto max-w-3xl pt-6 md:pt-12" onsubmit={ _ => {return false} }>
+            <h2 class="font-light text-center px-2" style="font-family:'Segoe UI';">Enter a video URL and select a language</h2>
             <div class="flex py-2 justify-center">
               <span class="w-4/6 pr-2">          
-                <input name="url" class="shadow-md h-10 appearance-none bg-transparent border-2 w-full text-gray-700 mr-3 py-2 px-10 leading-tight focus:outline-none" type="text" placeholder="Video URL" aria-label="Video URL"></input>
-              
+                <input onchange={(e)=> actions.validate(e.target.value)} name="url" class="shadow-md h-10 appearance-none bg-transparent border-2 w-full text-gray-700 mr-3 py-2 px-10 leading-tight focus:outline-none" type="text" placeholder="Video URL" aria-label="Video URL"></input>
+                <p class={`${state.validUrl && 'hidden'} ml-5 mt-2 text-xs text-red-500`}>Enter a valid URL (i.e. https://www.youtube.com/watch?v=t580RMh0iTA)</p>
               </span>
-              {/* onclick */}
-              <Button langs={state.languages} drop={state.dropdown} toggle={actions.toggle}></Button>
-            </div>
-            
+              <Button langs={state.languages} lang_list={state.lang_list} filter={actions.filter} drop={state.dropdown} toggle={actions.toggle} validate={actions.validate}></Button>
+            </div>     
           </form>
         </section>
-
-
       </div>
     )  
   }
   
+}
+
+function parseUrl(url){
+  let parse = { valid: false }
+  if (url.length > 10){
+    if(url.includes('youtube')){
+      parse.valid = true
+      parse.video_id = url.split("v=")[1];
+    }
+    else if(url.includes('youtu.be')){
+      parse.valid = true
+      parse.video_id = url.split("be/")[1];
+    }
+  }
+  return parse
 }

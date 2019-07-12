@@ -4,8 +4,6 @@ import { location, Route,  Switch} from "@hyperapp/router"
 import Home from './pages/home'
 import Translation from './pages/translation'
 
-//import actions from './actions'
-//import state from './state'
 import './style.css'
 
 const state = {
@@ -38,3 +36,17 @@ const view = (state, actions) => {
   )
 }
 app(state, actions, view, document.body)
+
+/**   TODO
+ *  move API_KEY to proxy server!
+ *  detect original captions language instead of defaulting to english
+ *  check if target language == source language
+ *  animate error/validation alerts
+ *  decode translations to allow 'quotes' and other symbols
+ *  disable autoscroll for mobile/small viewports
+ *  fix video seek timing issues
+ *  combine &q= params in get URL 
+ *  send multiple get requests to google for longer videos to avoid 413 network error
+ *  resize favicon bigger
+ *  ensure correct error messages sent
+ */
