@@ -49,7 +49,7 @@ export default {
         
       }).catch(function(error) {
         actions.setError({ caught: true, message: error.message })
-        setTimeout(()=>{ window.location.pathname = '/' }, 3000)
+        //setTimeout(()=>{ window.location.pathname = '/' }, 3000)
       });   
 
       function loadPlayer () {
