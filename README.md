@@ -1,30 +1,19 @@
-# Hyperapp-Tailwind-Parcel
+# YouTube-Captions-Translator
 
-## A Stack for 🚀 front-end design/developpement in 2019.
+## Web App to translate youtube captions (Powered by Google).
 
-I want to build an app with good ux/performance and have fun while doing it:
 
-- [x] Quick protoyping possible as well as complex production apps
-- [x] Design, build and iterate straight in the browser
-- [x] 0 configuration but powerful developpement tools (babel, postcss, tailwind, jsx, etc...)
-- [x] Stay close to vanilla ES6
-- [x] Light, fast & powerful
-- [x] [SRR](https://github.com/hyperapp/hyperapp#hydration) should be easy
+## Clone & Run
+1. `git clone https://github.com/Spankyed/YouTranslate`
+2. `npm install`
+3. `npm run dev`
 
-## Example  
-Check [Rocket Emoji](https://github.com/gary149/rocket-emoji) for a working example.
+Navigate to localhost:1234/YouTranslate
 
-## Dependencies:
+###You will not be able to translate the captions from youtube without a Google Cloud Api Key
 
-- [Hyperapp](https://github.com/hyperapp/hyperapp) - Minimal (1kb), Functional + Stateless components
-- [Tailwind](https://tailwindcss.com/docs/what-is-tailwind/) - Not a UI kit but a utility-first CSS framework
-- [Parcel](https://parceljs.org/getting_started.html) (Bundler) - Fast, 0 config
-- [Purgecss](https://github.com/FullHuman/purgecss) - Remove unused css classes
-- [JSX](https://www.npmjs.com/package/babel-plugin-transform-react-jsx) - Write HTML tags inside javascript
+## Google Cloud Api:
+Below is a link to signup for free-trial. After signing up, create a translate service instance, and retrieve an api key. 
+- [Google Cloud Api](https://cloud.google.com/apis/?utm_source=google&utm_medium=cpc&utm_campaign=na-US-all-en-dr-bkws-all-all-trial-e-dr-1007179&utm_content=text-ad-none-any-DEV_c-CRE_293733486129-ADGP_Hybrid+%7C+AW+SEM+%7C+BKWS+%7C+US+%7C+en+%7C+EXA+~+Tools+~+MGMT+Tools+~+Cloud+API+~+Google+Cloud+Apis-KWID_43700036673590261-kwd-218322698167&utm_term=KW_google%20cloud%20apis-ST_google+cloud+apis&gclid=Cj0KCQjwvdXpBRCoARIsAMJSKqJgZ1IbQ72R282ykREx12KEJy22V0cQEMIpsf78rH0YDMgvkTOnnqsaArpsEALw_wcB) 
 
-## Usage
 
-Just fork this repository and you are ready to go
-
-1. `npm install`
-2. `npm run dev`
