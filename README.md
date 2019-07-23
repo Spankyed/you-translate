@@ -6,7 +6,7 @@ Web App to translate youtube captions (Powered by Google Cloud).
 2. `npm install`
 3. `npm run dev`
 
-Navigate to localhost:1234/YouTranslate
+Navigate to `localhost:1234/YouTranslate`
 
 Please Note: You will not be able to translate the captions from youtube without a Google Cloud Api Key
 
