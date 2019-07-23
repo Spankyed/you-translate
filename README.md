@@ -1,7 +1,5 @@
 # YouTube-Captions-Translator
-
-## Web App to translate youtube captions (Powered by Google).
-
+Web App to translate youtube captions (Powered by Google Cloud).
 
 ## Clone & Run
 1. `git clone https://github.com/Spankyed/YouTranslate`
@@ -10,7 +8,7 @@
 
 Navigate to localhost:1234/YouTranslate
 
-###You will not be able to translate the captions from youtube without a Google Cloud Api Key
+Please Note: You will not be able to translate the captions from youtube without a Google Cloud Api Key
 
 ## Google Cloud Api:
 Below is a link to signup for free-trial. After signing up, create a translate service instance, and retrieve an api key. 
