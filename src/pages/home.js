@@ -14,7 +14,8 @@ const Button = ({ lang_list, drop, toggle, filter, validate }) => {
 
     //form.validate();
     if (parsedUrl.valid){     
-      window.location.pathname = `translate/${parsedUrl.video_id}/${lang.val}`; // location.go
+      window.location.pathname = `/YouTranslate/translate/${parsedUrl.video_id}/${lang.val}`; // location.go
+      //history.replaceState(null,null,`/YouTranslate/translate/${parsedUrl.video_id}/${lang.val}`)
     } else {
       validate(url) // set validUrl = false
     }

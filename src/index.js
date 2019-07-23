@@ -12,6 +12,8 @@ const state = {
   location: location.state // router module
 }
 
+state.location.pathname = window.location.pathname
+
 const actions = {
   home: Home.actions,
   translation: Translation.actions,
@@ -28,24 +30,26 @@ const view = (state, actions) => {
   return (
     <div>
       <Switch>    
-        <Route path="/" render={ index.home } />   
-        <Route path="/translate/:video_id/:lang_id" render={ index.translation } />       
+        <Route path="/YouTranslate/" render={ index.home } />   
+        <Route path="/YouTranslate/translate/:video_id/:lang_id" render={ index.translation } />       
       </Switch>
     </div>
 
   )
 }
+
 app(state, actions, view, document.body)
 
 /**   TODO
+ *  consider not using routes, and pass vid info in js
  *  move API_KEY to proxy server!
+ *  combine &q= params in get URL 
  *  detect original captions language instead of defaulting to english
  *  check if target language == source language
  *  animate error/validation alerts
  *  decode translations to allow 'quotes' and other symbols
  *  disable autoscroll for mobile/small viewports
  *  fix video seek timing issues
- *  combine &q= params in get URL 
  *  send multiple get requests to google for longer videos to avoid 413 network error
  *  resize favicon bigger
  *  ensure correct error messages sent

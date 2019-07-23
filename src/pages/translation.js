@@ -49,7 +49,7 @@ export default {
         
       }).catch(function(error) {
         actions.setError({ caught: true, message: error.message })
-        //setTimeout(()=>{ window.location.pathname = '/' }, 3000)
+        setTimeout(()=>{ window.location.pathname = '/YouTranslate' }, 3000)
       });   
 
       function loadPlayer () {
@@ -61,17 +61,8 @@ export default {
             color: 'white',
             autoplay : 1 , 
             controls : 0 
-          },
-          events: {
-            'onReady': onPlayerReady
           }
-
         });  
-        function onPlayerReady(event) {
-            player.mute();
-            //actions.load()
-        }
-        //actions.setPlayer(player)
       }
     }
 
@@ -96,7 +87,7 @@ export default {
           {
             state.loading ?
             (
-              <section class="yt-translation my-20 px-2 flex justify-center flex-wrap">
+              <section class="yt-translation mt-20 px-2 flex justify-center flex-wrap">
                 <div>
                   <span><i class="fas fa-spinner fa-spin fa-10x text-red-600"></i></span>
                   <div><h1 class="inline-block pt-10">T R A N S L A T I N G . . .</h1></div>       
@@ -105,12 +96,13 @@ export default {
 
             ) :
             (
-              <section class="yt-translation my-20 bg-gray-200 flex justify-center flex-wrap shadow-lg">
+              <section class="yt-translation mt-16 bg-gray-200 flex justify-center flex-wrap shadow-lg">
                 <div id="video-trans" oncreate= {init} class="flex px-2 bg-grey-700"></div>
 
                 <div class="flex-1 max-w-3xl rounded overflow-y-scroll" style="height: 480px;">
                   <a href="https://translate.google.com">
-                    <img src="/transby.png" class="mx-auto pt-3" style="max-height:35px;"/>
+                    {/* Change img src path if needed */}
+                    <img src="../../transby.png" class="mx-auto pt-3" style="max-height:35px;"/>
                   </a>
                   <div class="border-b-2 my-2"></div>
                   <div id="captions" class="py-1" lang="fr-x-mtfrom-en">
@@ -162,5 +154,6 @@ function getCaptionIndex(time, captions) {
   let index = captions.findIndex((caption) => {
       return parseFloat(caption.start) >= time
   })
+  if(index != 0) { index = index - 1}
   return index
 }
