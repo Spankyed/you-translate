@@ -5,7 +5,7 @@ import { find } from 'lodash'
 import striptags from 'striptags'
 
 // https://console.developers.google.com/apis/credentials
-const apiKey = 'AIzaSyCGKUu-Y4RWferkyq3jrIaQPn9IqYm0A1k';
+const apiKey = '';
 //https://www.youtube.com/watch?v=CIihb1WFj9M
 
 export default async function (videoId, target){
